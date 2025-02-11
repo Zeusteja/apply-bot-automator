@@ -2,7 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Building2, Robot } from "lucide-react";
+import { Building2, Bot } from "lucide-react";
 import { JobCardActions } from "./JobCardActions";
 import { useState } from "react";
 import { AutomatedApplicationForm } from "./AutomatedApplicationForm";
@@ -68,7 +68,7 @@ export const JobCard = ({ job, onDelete, onEdit }: JobCardProps) => {
               className="flex items-center gap-2"
               onClick={() => setAutomatedFormOpen(true)}
             >
-              <Robot className="w-4 h-4" />
+              <Bot className="w-4 h-4" />
               Automate Application
             </Button>
             <Button className="bg-brand-500 hover:bg-brand-600 text-white">
