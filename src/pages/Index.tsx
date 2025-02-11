@@ -5,6 +5,7 @@ import { JobSearchFilters } from "@/components/JobSearchFilters";
 import { JobCard } from "@/components/JobCard";
 import { JobForm } from "@/components/JobForm";
 import { AutomatedApplications } from "@/components/AutomatedApplications";
+import { JobSearchAutomation } from "@/components/JobSearchAutomation";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -98,7 +99,8 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-8">
+            <JobSearchAutomation />
             <AutomatedApplications />
           </div>
         </div>

@@ -53,6 +53,78 @@ export type Database = {
           },
         ]
       }
+      job_search_automation: {
+        Row: {
+          auto_apply: boolean | null
+          cover_letter_template: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          job_title: string
+          keywords: string[] | null
+          last_search_at: string | null
+          linkedin_profile: string | null
+          location: string | null
+          max_salary: number | null
+          min_salary: number | null
+          remote_only: boolean | null
+          required_skills: string[] | null
+          resume_url: string | null
+          search_glassdoor: boolean | null
+          search_indeed: boolean | null
+          search_interval_hours: number | null
+          search_linkedin: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_apply?: boolean | null
+          cover_letter_template?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          job_title: string
+          keywords?: string[] | null
+          last_search_at?: string | null
+          linkedin_profile?: string | null
+          location?: string | null
+          max_salary?: number | null
+          min_salary?: number | null
+          remote_only?: boolean | null
+          required_skills?: string[] | null
+          resume_url?: string | null
+          search_glassdoor?: boolean | null
+          search_indeed?: boolean | null
+          search_interval_hours?: number | null
+          search_linkedin?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_apply?: boolean | null
+          cover_letter_template?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          job_title?: string
+          keywords?: string[] | null
+          last_search_at?: string | null
+          linkedin_profile?: string | null
+          location?: string | null
+          max_salary?: number | null
+          min_salary?: number | null
+          remote_only?: boolean | null
+          required_skills?: string[] | null
+          resume_url?: string | null
+          search_glassdoor?: boolean | null
+          search_indeed?: boolean | null
+          search_interval_hours?: number | null
+          search_linkedin?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       jobs: {
         Row: {
           company: string
