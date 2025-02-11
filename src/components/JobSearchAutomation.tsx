@@ -148,7 +148,7 @@ export const JobSearchAutomation = () => {
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <h3 className="text-lg font-medium">{search.job_title}</h3>
-                    <Badge variant={search.is_active ? "success" : "secondary"}>
+                    <Badge variant={search.is_active ? "default" : "secondary"}>
                       {search.is_active ? "Active" : "Paused"}
                     </Badge>
                   </div>
