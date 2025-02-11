@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,11 +25,32 @@ export const JobForm = ({ open, onClose, onSave, job }: JobFormProps) => {
   const [description, setDescription] = useState(job?.description || "");
   const [url, setUrl] = useState(job?.url || "");
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   const { toast } = useToast();
 
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+      }
+    };
+    getUser();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!userId) {
+      toast({
+        title: "Error",
+        description: "User not authenticated",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -51,16 +72,15 @@ export const JobForm = ({ open, onClose, onSave, job }: JobFormProps) => {
       } else {
         const { error } = await supabase
           .from('jobs')
-          .insert([
-            {
-              title,
-              company,
-              location,
-              salary,
-              description,
-              url,
-            },
-          ]);
+          .insert({
+            title,
+            company,
+            location,
+            salary,
+            description,
+            url,
+            user_id: userId,
+          });
 
         if (error) throw error;
       }
