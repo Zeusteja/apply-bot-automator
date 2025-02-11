@@ -4,6 +4,7 @@ import { JobSearchInput } from "@/components/JobSearchInput";
 import { JobSearchFilters } from "@/components/JobSearchFilters";
 import { JobCard } from "@/components/JobCard";
 import { JobForm } from "@/components/JobForm";
+import { AutomatedApplications } from "@/components/AutomatedApplications";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -74,25 +75,31 @@ const Index = () => {
           </Button>
         </div>
 
-        <div className="space-y-8 animate-slideUp">
-          <JobSearchInput />
-          <JobSearchFilters />
-          
-          <div className="grid gap-6">
-            {loading ? (
-              <p className="text-center text-gray-600">Loading jobs...</p>
-            ) : jobs.length === 0 ? (
-              <p className="text-center text-gray-600">No jobs found. Add your first job!</p>
-            ) : (
-              jobs.map((job) => (
-                <JobCard
-                  key={job.id}
-                  job={job}
-                  onDelete={fetchJobs}
-                  onEdit={() => handleEdit(job)}
-                />
-              ))
-            )}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-8 animate-slideUp">
+            <JobSearchInput />
+            <JobSearchFilters />
+            
+            <div className="grid gap-6">
+              {loading ? (
+                <p className="text-center text-gray-600">Loading jobs...</p>
+              ) : jobs.length === 0 ? (
+                <p className="text-center text-gray-600">No jobs found. Add your first job!</p>
+              ) : (
+                jobs.map((job) => (
+                  <JobCard
+                    key={job.id}
+                    job={job}
+                    onDelete={fetchJobs}
+                    onEdit={() => handleEdit(job)}
+                  />
+                ))
+              )}
+            </div>
+          </div>
+
+          <div className="lg:col-span-1">
+            <AutomatedApplications />
           </div>
         </div>
 
