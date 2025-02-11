@@ -1,42 +1,64 @@
 
+import { useEffect, useState } from "react";
 import { JobSearchInput } from "@/components/JobSearchInput";
 import { JobSearchFilters } from "@/components/JobSearchFilters";
 import { JobCard } from "@/components/JobCard";
+import { JobForm } from "@/components/JobForm";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import type { Database } from "@/integrations/supabase/types";
 
-const SAMPLE_JOBS = [
-  {
-    title: "Senior Frontend Developer",
-    company: "TechCorp Inc.",
-    location: "San Francisco, CA",
-    salary: "$120k - $180k",
-    description:
-      "We're looking for a Senior Frontend Developer to join our team. You'll be working on our main product, building new features and improving existing ones.",
-    postedDate: "2 days ago",
-    status: "new",
-  },
-  {
-    title: "Full Stack Engineer",
-    company: "StartupXYZ",
-    location: "Remote",
-    salary: "$100k - $150k",
-    description:
-      "Join our fast-growing startup as a Full Stack Engineer. Work on challenging problems and help us scale our platform.",
-    postedDate: "1 week ago",
-    status: "applied",
-  },
-  {
-    title: "React Developer",
-    company: "InnovateWeb",
-    location: "New York, NY",
-    salary: "$90k - $130k",
-    description:
-      "Looking for a React Developer to help build modern web applications. Experience with TypeScript and Next.js is a plus.",
-    postedDate: "3 days ago",
-    status: "saved",
-  },
-] as const;
+type Job = Database['public']['Tables']['jobs']['Row'];
 
 const Index = () => {
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [formOpen, setFormOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<Job | undefined>();
+  const { toast } = useToast();
+
+  const fetchJobs = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      setJobs(data);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const handleEdit = (job: Job) => {
+    setSelectedJob(job);
+    setFormOpen(true);
+  };
+
+  const handleAdd = () => {
+    setSelectedJob(undefined);
+    setFormOpen(true);
+  };
+
+  const handleSave = () => {
+    fetchJobs();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-12">
@@ -44,9 +66,12 @@ const Index = () => {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Find Your Next Opportunity
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-gray-600 mb-6">
             Search through thousands of jobs tailored to your skills and experience
           </p>
+          <Button onClick={handleAdd} className="bg-brand-500 hover:bg-brand-600">
+            <Plus className="mr-2 h-4 w-4" /> Add New Job
+          </Button>
         </div>
 
         <div className="space-y-8 animate-slideUp">
@@ -54,11 +79,32 @@ const Index = () => {
           <JobSearchFilters />
           
           <div className="grid gap-6">
-            {SAMPLE_JOBS.map((job, index) => (
-              <JobCard key={index} {...job} />
-            ))}
+            {loading ? (
+              <p className="text-center text-gray-600">Loading jobs...</p>
+            ) : jobs.length === 0 ? (
+              <p className="text-center text-gray-600">No jobs found. Add your first job!</p>
+            ) : (
+              jobs.map((job) => (
+                <JobCard
+                  key={job.id}
+                  job={job}
+                  onDelete={fetchJobs}
+                  onEdit={() => handleEdit(job)}
+                />
+              ))
+            )}
           </div>
         </div>
+
+        <JobForm
+          open={formOpen}
+          onClose={() => {
+            setFormOpen(false);
+            setSelectedJob(undefined);
+          }}
+          onSave={handleSave}
+          job={selectedJob}
+        />
       </div>
     </div>
   );
